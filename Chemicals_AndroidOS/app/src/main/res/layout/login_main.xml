@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/add_suppl_relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@drawable/bg_yellow"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="SIGN IN"
+    android:id="@+id/textView"
+    android:textColor="@color/text"
+    android:textSize="30sp"
+    android:layout_marginTop="44dp"
+    android:layout_below="@+id/disconnect_button"
+    android:layout_centerHorizontal="true" />
+
+    <!--
+<com.google.android.gms.common.SignInButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/sign_in"
+    android:id="@+id/sign_in_button"
+    android:layout_marginTop="10dp"
+    android:layout_below="@+id/supp_website"
+    android:layout_centerHorizontal="true"
+    android:textSize="25sp"/> -->
+
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_alignTop="@+id/return_text"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_out"
+        android:textColor="@android:color/white"
+        android:theme="@style/ThemeOverlay.MyDarkButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/disconnect_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/disconnect"
+        android:textColor="@android:color/white"
+        android:theme="@style/ThemeOverlay.MyDarkButton"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView" />
+
+
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/return_text"
+    android:id="@+id/return_text"
+    android:textColor="#000"
+    android:background="#ccd3d3d3"
+    android:textSize="20sp"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signed_out"
+        android:textColor="@android:color/widget_edittext_dark"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/sign_in_button"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView"
+        android:visibility="gone" />
+</RelativeLayout>

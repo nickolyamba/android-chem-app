@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/refresh_button"
+        android:id="@+id/chem_refresh_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add NEW Chemical"
+        android:id="@+id/addChem_button"
+        android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listview_chemical"
+        android:layout_width="match_parent"
+        android:layout_height="470dp"
+        android:layout_gravity="bottom"/>
+</LinearLayout>
+
+        <FrameLayout
+        android:id="@+id/add_chem_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AddChemicalFragment"/>
+
+    <FrameLayout
+        android:id="@+id/edit_chem_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AddChemicalFragment"/>
+
+</FrameLayout>

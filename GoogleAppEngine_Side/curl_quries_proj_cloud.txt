@@ -1,0 +1,205 @@
+http://stackoverflow.com/questions/630453/put-vs-post-in-rest
+http://stackoverflow.com/questions/256349/what-are-the-best-common-restful-url-verbs-and-actions/256359#256359
+http://www.restapitutorial.com/lessons/httpmethods.html
+
+														Supplier
+
+POST supplier data:
+curl --include --data "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" http://cs496-final-proj.appspot.com/supplier
+
+curl --include --data "name=AlfaAesar&website=http://www.alfaaesar.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier
+
+curl --include --data "name=VWR&website=http://www.vwr.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier
+
+Tests: Success
+1) Empty Supplier
+Expected: Returns 400 Invalid Request and other details in json
+curl --include --data "name=&website=http://www.vwr.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier
+
+2) Adding Already Existing Supplier
+Expected: Returns 400 Invalid Request and other details in json, do not add duplicate
+curl --include --data "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier
+
+----------------------------------------------------GET Supplier--------------------------------------------------------------
+GET all suppliers data:!!!
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier
+!!!!!!!!!!!!!!!!!
+[{"key": 4504699138998272, "name": "Aldrich", "website": "http://www.aldrich.com"}, {"key": 5067649092419584, "name": "V
+WR", "website": "http://www.vwr.com"}, {"key": 5630599045840896, "name": "AlfaAesar", "website": "http://www.alfaaesar.c
+om"}]
+
+
+GET 1 Supplier entity by its id:
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/5629499534213120
+
+{"website": "http://www.alfaaesar.com", "name": "AlfaAesar", "key": 5676830073815040}
+
+
+Tests: Success
+3) GET one Supplier entity by its id:
+Expected: Returns 404 Not Found and other details in json, suggests the correct URI to look up ids
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/fdsfdsfsd
+
+
+----------------------------------------------------PUT Supplier--------------------------------------------------------------
+curl -i -X PUT -d "name=Amazon&website=http://www.amazon.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/Aldrich
+
+curl -i -X PUT -d "name=Amazon&website=http://www.amazon.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/5629499534213120
+curl -i -X PUT -d "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/5629499534213120
+
+Examples:
+http://blogs.operationaldynamics.com/andrew/software/research/testing-rest-the-hard-way
+http://alvinalexander.com/web/using-curl-scripts-to-test-restful-web-services
+curl -X PUT -d name=value http://server.example.com/resource/1
+curl \
+--header "Content-type: application/json" \
+--request PUT \
+--data '{"id": 100, "title": "Test Title", "note": "Test note"}' \
+http://myhost/notes/rest?_dc=1379027286060
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" https://cs496-final-proj.appspot.com/chemical/5657382461898752/supplier/5676830073815040
+
+----------------------------------------------------DELETE Supplier--------------------------------------------------------------
+
+DELETE Supplier and reference to it in the corresponding Chemical entity:
+curl -i -X DELETE -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/5634387206995968
+-----------------------------------------------------------------------------------------------------------------
+POST Supplier Search:
+curl --include --data "name=Aldrich" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/search
+
+Response:{"keys": [5717271485874176]}
+
+Tests: Success
+4) Niether name, nor website is entered.
+Expected: Returns 404 Not Found and other details in json
+curl --include --data "fdfds" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/search
+
+5) Name is empty
+Expected: Returns 404 Not Found and other details in json
+curl --include --data "name=" -H "Accept: application/json" https://cs496-final-proj.appspot.com/supplier/search
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+											
+											Chemical
+POST chemical data:
+curl --include --data "name=Li2S&supplier=5649050225344512&catalog=543-54-85&cas=265-98-78" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+curl --include --data "name=Sulfur&supplier=5668600916475904&catalog=fgd-df-85&cas=265-89-00" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+curl --include --data "name=Aceton&supplier=5649050225344512&catalog=42-00-4fd&cas=89-89-00" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+curl --include --data "name=Water&supplier=6192449487634432&catalog=98-00-5fd&cas=56-62-03" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+curl --include --data "name=Glycol&supplier=5066549580791808&catalog=11-00-57&cas=36-61-035" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+curl --include --data "name=Pyridine&supplier=5066549580791808&catalog=12-01-54&cas=32-62-032" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+
+Tests: Success
+6) No name entered:
+Expected: Returns 400 Invalid Request and other details in json
+curl --data "name=&supplier=5717271485874176&cas=89-89-00" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+7) No supplier is entered:
+Expected: Returns 400 Invalid Request and other details in json
+curl --data "name=Water&supplier=&cas=89-89-00" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+
+8) Supplier id isn't a digit:
+Expected: Returns 400 Invalid Request and other details in json
+curl --data "name=Water&supplier=fdsfdsfsdhg&cas=89-89-00" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+
+9) Duplicate:
+Expected: adds duplicate since it's OK to have several chemical with the same name, cas and supplier, they may have different catalog number
+curl --include --data "name=Water&supplier=5717271485874176&catalog=98-00-5fd&cas=56-62-03" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+
+
+!!!GET: All Chemicals List!!!
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical
+
+{"chemicals": 
+	[
+		{"supplier": 5668600916475904, "cas": "265-89-00", "catalog": "fgd-df-85", "name": "Sulfur", "key": 5657382461898752}, 
+		{"supplier": 5649050225344512, "cas": "265-98-78", "catalog": "543-54-85", "name": "Li2S", "key": 5750085036015616}
+	]
+}
+
+-----------------------------------------------------------------------------------------------------------------
+
+PUT: ChemicalSupplier - Update supplier KeyProperty:
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" https://cs496-final-proj.appspot.com/chemical/5657382461898752/supplier/5676830073815040
+
+Tests: Success
+10) No supplier sid provided or it has chars
+Expected: Returns 404 Not Found and other details in json
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" https://cs496-final-proj.appspot.com/chemical/5657382461898752/supplier/
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" https://cs496-final-proj.appspot.com/chemical/5657382461898752/supplier/fdsfsd
+
+11) No chemical cid provided or it has chars
+Expected: Returns 404 Not Found and other details in json
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" https://cs496-final-proj.appspot.com/chemical/supplier/5676830073815040
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" https://cs496-final-proj.appspot.com/chemical/4fdsfs/supplier/5676830073815040
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+
+												Solution
+POST solution data
+curl -i --data "solutionID=1&name=Solution #1&volume=25&chemicals[]=5634387206995968&chemicals[]=5113880120393728" -H "Accept: application/json" https://cs496-final-proj.appspot.com/solution
+
+curl -i --data "solutionID=2&name=Solution #2&volume=50&chemicals[]=5657382461898752&chemicals[]=5693417237512192" -H "Accept: application/json" https://cs496-final-proj.appspot.com/solution
+
+
+curl -i --data "solutionID=3&name=Solution #3&volume=25&chemicals[]=5345825534246912&chemicals[]=6471725441089536" -H "Accept: application/json" https://cs496-final-proj.appspot.com/solution
+
+
+Tests: Success
+Adding Solution with the same ID
+Expected Result: Duplicate solution with the same solutionID is not added
+
+curl -i --data "solutionID=1&name=Solution #1&volume=50&chemicals[]=5657382461898752&chemicals[]=5693417237512192" -H "Accept: application/json" https://cs496-final-proj.appspot.com/solution
+
+
+!!!GET: All Solutions List!!!
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/solution
+curl --include -H "Accept: application/json" https://cs496-final-proj.appspot.com/solution
+
+[{"name": "Solution #1", "solutionID": 3451, "chemicals": [5064350557536256, 5064350557536256], "key": 6190250464378880,
+ "volume": 50}, {"name": "Solution #1", "solutionID": 3453, "chemicals": [5064350557536256, 6471725441089536], "key": 6753200417800192, "volume": 50}]
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+
+DELETE Chemical and reference to it in the corresponding Solution entity:
+curl -i -X DELETE -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical/5634387206995968
+
+Tests: Success!
+Expected Result: Chemical Entity is deleted, key reference in the Solution is deleted
+Actual Result: Chemical Entity is deleted, key reference in the Solution is deleted
+Provides json containing Solution entity that was modified and json of the deleted Chemical
+
+Tests: Success
+Enter Invalid Chemical ID
+Expected Result: 404 Not Found. No chemical with = 50763 found in json
+
+curl -i -X DELETE -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical/50763
+
+Tests: Success
+Enter no Chemical ID
+Expected Result: 404 Not Found. Chemical id must present and be integer in json
+curl -i -X DELETE -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical/
+
+Tests: Success
+Enter not digits as a Chemical ID
+Expected Result: 404 Not Found. Chemical id must present and be integer in json
+curl -i -X DELETE -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical/fdsfsdfs

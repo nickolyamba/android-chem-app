@@ -1,0 +1,311 @@
+http://stackoverflow.com/questions/630453/put-vs-post-in-rest
+http://stackoverflow.com/questions/256349/what-are-the-best-common-restful-url-verbs-and-actions/256359#256359
+http://www.restapitutorial.com/lessons/httpmethods.html
+
+														Supplier
+
+POST supplier data:
+curl --include --data "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" http://localhost:20080/supplier
+
+curl --include --data "name=AlfaAesar&website=http://www.alfaaesar.com" -H "Accept: application/json" http://localhost:20080/supplier
+
+curl --include --data "name=VWR&website=http://www.vwr.com" -H "Accept: application/json" http://localhost:20080/supplier
+
+curl --include --data "name=VWR&website=https://116020417384008102638:ya29.jQE-rlza6o47JlY9jQunMgLwnSr3jd3skeuP76MB83OVfa2RaHq0YRugpDp_dthy6sRLBQCIt7daGQ@www.vwr.com" -H "Accept: application/json" http://localhost:20080/supplier
+
+Tests: Success
+1) Empty Supplier
+Expected: Returns 400 Invalid Request and other details in json
+curl --include --data "name=&website=http://www.vwr.com" -H "Accept: application/json" http://localhost:20080/supplier
+
+2) Adding Already Existing Supplier
+Expected: Returns 400 Invalid Request and other details in json, do not add duplicate
+curl --include --data "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" http://localhost:20080/supplier
+
+----------------------------------------------------GET Supplier--------------------------------------------------------------
+GET 1 Supplier entity by ID:
+curl --include -H "Accept: application/json" http://localhost:20080/supplier/5066549580791808
+
+{"website": "http://www.alfaaesar.com", "name": "AlfaAesar", "key": 5676830073815040}
+
+
+!!!!!!!!!!!!!!!!! - Combine previous two
+GET all suppliers data:!!!
+curl --include -H "Accept: application/json" http://localhost:20080/supplier
+curl --include -H "Accept: application/json" http://localhost:20080/supplier
+!!!!!!!!!!!!!!!!!
+{"suppliers": [{"name": "AlfaAesar", "website": "http://www.alfaaesar.com", "key": 5066549580791808}, {"name": "Aldrich","website": "http://www.aldrich.com", "key": 5136918324969472}, {"name": "VWR", "website": "http://www.vwr.com", "key": 6192449487634432}]}
+
+Tests: Success
+3) GET one Supplier entity by its id:
+Expected: Returns 404 Not Found and other details in json, suggests the correct URI to look up ids
+curl --include -H "Accept: application/json" http://localhost:20080/supplier/fdsfdsfsd
+
+
+----------------------------------------------------PUT Supplier--------------------------------------------------------------
+curl -i -X PUT -d "name=Amazon&website=http://www.amazon.com" -H "Accept: application/json" http://localhost:20080/supplier/Aldrich
+curl -i -X PUT -d "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" http://localhost:20080/supplier/Amazon
+
+curl -i -X PUT -d "name=Amazon&website=http://www.amazon.com" -H "Accept: application/json" http://localhost:20080/supplier/5066549580791808
+curl -i -X PUT -d "name=Aldrich&website=http://www.aldrich.com" -H "Accept: application/json" http://localhost:20080/supplier/5629499534213120
+
+Examples:
+http://blogs.operationaldynamics.com/andrew/software/research/testing-rest-the-hard-way
+http://alvinalexander.com/web/using-curl-scripts-to-test-restful-web-services
+curl -X PUT -d name=value http://server.example.com/resource/1
+curl \
+--header "Content-type: application/json" \
+--request PUT \
+--data '{"id": 100, "title": "Test Title", "note": "Test note"}' \
+http://myhost/notes/rest?_dc=1379027286060
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" http://localhost:20080/chemical/5657382461898752/supplier/5676830073815040
+
+----------------------------------------------------DELETE Supplier--------------------------------------------------------------
+
+DELETE Supplier and reference to it in the corresponding Chemical entity:
+curl -i -X DELETE -H "Accept: application/json" http://localhost:20080/supplier/6192449487634432
+
+
+-----------------------------------------------------POST Supplier Search:------------------------------------------------------------
+POST Supplier Search:
+curl --include --data "name=Aldrich" -H "Accept: application/json" http://localhost:20080/supplier/search
+
+Response:{"keys": [5717271485874176]}
+
+Tests: Success
+4) Niether name, nor website is entered.
+Expected: Returns 404 Not Found and other details in json
+curl --include --data "fdfds" -H "Accept: application/json" http://localhost:20080/supplier/search
+
+5) Name is empty
+Expected: Returns 404 Not Found and other details in json
+curl --include --data "name=" -H "Accept: application/json" http://localhost:20080/supplier/search
+-----------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------POST Chemical--------------------------------------------------------------											
+														Chemical
+POST chemical data:
+curl --include --data "name=Li2S&supplier=5629499534213120&catalog=543-54-85&cas=265-98-78" -H "Accept: application/json" http://localhost:20080/chemical
+
+curl --include --data "name=Sulfur&supplier=5629499534213120&catalog=fgd-df-85&cas=265-89-00" -H "Accept: application/json" http://localhost:20080/chemical
+
+curl --include --data "name=Aceton&supplier=6192449487634432&catalog=42-00-4fd&cas=89-89-00" -H "Accept: application/json" http://localhost:20080/chemical
+
+curl --include --data "name=Water&supplier=5066549580791808&catalog=98-00-5fd&cas=56-62-03" -H "Accept: application/json" http://localhost:20080/chemical
+
+curl --include --data "name=Glycol&supplier=5066549580791808&catalog=11-00-57&cas=36-61-035" -H "Accept: application/json" http://localhost:20080/chemical
+
+curl --include --data "name=Pyridine&supplier=5066549580791808&catalog=12-01-54&cas=32-62-032" -H "Accept: application/json" http://localhost:20080/chemical
+
+
+Tests: Success
+6) No name entered:
+Expected: Returns 400 Invalid Request and other details in json
+curl --data "name=&supplier=5717271485874176&cas=89-89-00" -H "Accept: application/json" http://localhost:20080/chemical
+
+7) No supplier is entered:
+Expected: Returns 400 Invalid Request and other details in json
+curl --data "name=Water&supplier=&cas=89-89-00" -H "Accept: application/json" http://localhost:20080/chemical
+
+
+8) Supplier id isn't a digit:
+Expected: Returns 400 Invalid Request and other details in json
+curl --data "name=Water&supplier=fdsfdsfsdhg&cas=89-89-00" -H "Accept: application/json" http://localhost:20080/chemical
+
+
+9) Duplicate:
+Expected: adds duplicate since it's OK to have several chemical with the same name, cas and supplier, they may have different catalog number
+curl --include --data "name=Water&supplier=5717271485874176&catalog=98-00-5fd&cas=56-62-03" -H "Accept: application/json" http://localhost:20080/chemical
+
+
+----------------------------------------------------------GET All Chemicals--------------------------------------------------------------	
+!!!GET: All Chemicals List!!!
+curl --include -H "Accept: application/json" http://localhost:20080/chemical
+curl --include -H "Accept: application/json" http://localhost:20080/chemical
+
+{"chemicals": [{"supplier": 5136918324969472, "name": "Sulfur", "catalog": "fgd-df-85", "cas": "265-89-00", "key": 4855443
+348258816}, {"supplier": 5136918324969472, "name": "Li2S", "catalog": "543-54-85", "cas": "265-98-78", "key": 626281823181
+2096}, {"supplier": 6192449487634432, "name": "Aceton", "catalog": "42-00-4fd", "cas": "89-89-00", "key": 5418393301680128
+}]}
+
+----------------------------------------------------PUT Chemicals-------------------------------------------------------------------------
+curl -i -X PUT -d "name=LiOH&cas=652-321-68&supplier=5649050225344512&catalog=20165-50G" -H "Accept: application/json" https://cs496-final-proj.appspot.com/chemical/5733935958982656
+
+curl -i -X PUT -d "name=Acetone&cas=333-489-29&newSupplier=5066549580791808&oldSupplier=6192449487634432&catalog=45612-1L" -H "Accept: application/json" http://localhost:20080/chemical/5418393301680128
+
+ https://cs496-final-proj.appspot.com/chemical
+
+
+
+----------------------------------------------------DELETE Chemicals--------------------------------------------------------------
+DELETE Chemical and reference to it in the corresponding Solution entity:
+curl -i -X DELETE -H "Accept: application/json" http://localhost:20080/chemical/4642138092470272
+
+
+----------------------------------------------------PUT ChemicalSupplier--------------------------------------------------------------
+
+PUT: ChemicalSupplier - Update supplier KeyProperty:
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" http://localhost:20080/chemical/5657382461898752/supplier/5676830073815040
+
+Tests: Success
+10) No supplier sid provided or it has chars
+Expected: Returns 404 Not Found and other details in json
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" http://localhost:20080/chemical/5657382461898752/supplier/
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" http://localhost:20080/chemical/5657382461898752/supplier/fdsfsd
+
+11) No chemical cid provided or it has chars
+Expected: Returns 404 Not Found and other details in json
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" http://localhost:20080/chemical/supplier/5676830073815040
+
+curl -i -X PUT -H "Accept: application/json" -H "Content-Length: 0" http://localhost:20080/chemical/4fdsfs/supplier/5676830073815040
+
+----------------------------------------------------POST Solution--------------------------------------------------------------------------
+
+												Solution
+POST solution data
+curl -i --data "solutionID=1&name=Solution #1&volume=25&chemicals[]=5838406743490560&chemicals[]=4642138092470272" -H "Accept: application/json" http://localhost:20080/solution
+
+curl -i --data "solutionID=2&name=Solution #2&volume=50&chemicals[]=6401356696911872&chemicals[]=4993981813358592" -H "Accept: application/json" http://localhost:20080/solution
+
+
+curl -i --data "solutionID=3&name=Solution #3&volume=25&chemicals[]=4993981813358592&chemicals[]=5838406743490560" -H "Accept: application/json" http://localhost:20080/solution
+
+
+Tests: Success
+Adding Solution with the same ID
+Expected Result: Duplicate solution with the same solutionID is not added
+
+curl -i --data "solutionID=1&name=Solution #1&volume=50&chemicals[]=5657382461898752&chemicals[]=5693417237512192" -H "Accept: application/json" http://localhost:20080/solution
+
+----------------------------------------------------GET All Solution--------------------------------------------------------------------------
+!!!GET: All Solutions List!!!
+curl --include -H "Accept: application/json" http://localhost:20080/solution
+curl --include -H "Accept: application/json" http://localhost:20080/solution
+
+[{"name": "Solution #1", "solutionID": 3451, "chemicals": [5064350557536256, 5064350557536256], "key": 6190250464378880,
+ "volume": 50}, {"name": "Solution #1", "solutionID": 3453, "chemicals": [5064350557536256, 6471725441089536], "key": 6753200417800192, "volume": 50}]
+
+----------------------------------------------------DELETE Solution--------------------------------------------------------------------------
+DELETE Chemical and reference to it in the corresponding Solution entity:
+curl -i -X DELETE -H "Accept: application/json" http://localhost:20080/solution/5768037999312896
+
+{"solutions": [{"volume": 25, "key": 5768037999312896, "chemicals": [5838406743490560], "name": "Solution #1", "solutionID": 1}]}
+
+
+
+
+curl -i -v --data "idToken=ya29.jAGANlUpZrojNCBj7u0RTRkQc0E8vdMtnlSgA2ht-vE5JRKOPbee83i8zBzna_sj5ltDyWYMPkGNXA" -H "Accept: application/json" http://user:passwd@localhost:20080/signin
+
+curl -i --data "idToken=ya29.jQGbl8VuK-I2CrijayqJQaBdqnPIarPxKsW3MgXRd_wcMjKl3io46OSktYWCtKKpVr1TmyvtreSRGQ116020417384008102638" -H "Accept: application/json" https://cs496-final-proj.appspot.com/signin
+
+http://cs496-final-proj.appspot.com/supplier
+
+http://stackoverflow.com/questions/1968416/how-to-do-http-authentication-in-android
+
+c.setRequestProperty("Authorization", "basic " +
+        Base64.encode("myuser:mypass".getBytes()));
+
+http://user:passwd@www.server.com/index.html
+
+from apiclient.discovery import build
+import webapp2
+from google.appengine.ext import ndb
+import db_models
+import json
+from oauth2client import client, crypt
+
+# (Receive token by HTTPS POST)
+class GetToken(webapp2.RequestHandler):
+	def post(self):
+		access_token = self.request.get('idToken', default_value=None)
+		#https://developers.google.com/identity/sign-in/android/backend-auth
+		try:
+			out = build('oauth2', 'v1').tokeninfo(access_token=access_token).execute()
+			self.response.write(out)
+		
+			idinfo = client.verify_id_token(token, CLIENT_ID)
+			# If multiple clients access the backend server:
+			if idinfo['aud'] not in [ANDROID_CLIENT_ID, IOS_CLIENT_ID, WEB_CLIENT_ID]:
+				raise crypt.AppIdentityError("Unrecognized client.")
+				self.response.write("Unrecognized client.")
+				return
+			if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+				raise crypt.AppIdentityError("Wrong issuer.")
+				self.response.write("Wrong issuer.")
+				return
+			if idinfo['hd'] != APPS_DOMAIN_NAME:
+				raise crypt.AppIdentityError("Wrong hosted domain.")
+		except crypt.AppIdentityError:
+			#Invalid token
+			self.response.write("Invalid Token!")
+		#userid = idinfo['sub']
+		#self.response.write(userid)
+
+
+
+		VERSION2
+		token = self.request.get('idToken', default_value=None)
+		self.response.write("TOKEN:" + token)
+		auth_dict = ''
+		#https://developers.google.com/identity/sign-in/android/backend-auth
+		try:
+			auth_dict = build('oauth2', 'v1').tokeninfo(access_token=token).execute()
+			self.response.write("auth_dict:" + auth_dict)
+		except:
+			self.response.write("auth_dict:" + auth_dict)
+		'''
+		auth_json = json.dumps(auth_dict)
+		self.response.write(auth_json)
+		USER_ID = auth_json['user_id']
+		# If supplier new, add it
+		user = db_models.User()
+		user.name = USER_ID
+		user.hash_token = hashlib.md5(token).hexdigest()
+		#self.redirect(self.uri_for('home')
+		'''
+
+		LAST VERSIOn
+		out = build('oauth2', 'v1').tokeninfo(access_token=token).execute()
+			auth_json = json.dumps(out)
+			USER_ID = auth_json['user_id']
+			# If supplier new, add it
+			hash_token = hashlib.md5(token).hexdigest()
+			user = db_models.User(userID=USER_ID ,hashToken=hash_token, id=hash_token)
+			#user.put()
+
+!!!!!!!!!
+https://developers.google.com/identity/protocols/OAuth2InstalledApp
+!!!!!!!!!
+
+
+ya29.jAFvti6elzoEafrXgW-jjGqcpdXFnT3MHn_I3kZD8lYfDAvcnnvRRGaNc3fIVBF6bchH2EwHYa8LVw
+ya29.jAHF_DDlyB4POQX2zzJeSa_abLRoURUhtzDoA8WPVWdZCughFxvmfj7CVGTYV5v_DTVN-cx--SmTFg
+116020417384008102638
+116020417384008102638
+
+
+{u'issued_to': u'284185944754-qfp0bpms6rsmjbnk0gvmcp72t7dtcsm4.apps.googleusercontent.com', u'user_id': u'116020417384008102638', u'expires_in': 3446, u'access_type': u'online', u'audience': u'284185944754-qfp0bpms6rsmjbnk0gvmcp72t7dtcsm4.apps.googleusercontent.com', u'scope': u'https://www.googleapis.com/auth/userinfo.profile'}
+
+
+curl -i -v --data "idToken=ya29.jAFP1qeYkKgAGAJyxvF3Evl2AqK82VqLIWD9kTGiJ9_HjgKiO6eSHF1-o4TXFzGmBJ2f-KeGiRqw-A" -H "Accept: application/json" http://localhost:21080/signin
+
+
+curl --include --data "name=VWR&website=https://www.vwr.com" -H "Accept: application/json" http://116020417384008102638:ya29.jQE-rlza6o47JlY9jQunMgLwnSr3jd3skeuP76MB83OVfa2RaHq0YRugpDp_dthy6sRLBQCIt7daGQ@cs496-final-proj.appspot.com/supplier
+
+http://user:passwd@www.server.com/index.html
+
+curl --include --data "name=VWRrete&website=http://www.vwrbrtre.com" -H "Accept: application/json" https://116020417384008102638:ya29.jQFugzBASb5rGmJRDjOK-gwwdYQjyJdp5RZzm4F60mXsuoXVjWbskG4HkEqX88uA1zpCQCmGONbVxA@cs496-final-proj.appspot.com/supplier
+
+curl --include -H "Accept: application/json" https://116020417384008102638:ya29.jQFugzBASb5rGmJRDjOK-gwwdYQjyJdp5RZzm4F60mXsuoXVjWbskG4HkEqX88uA1zpCQCmGONbVxA@cs496-final-proj.appspot.com/supplier
+
+curl --include -H "Accept: application/json" http://116020417384008102638:ya29.jQGgX6ZzNiTM4tGlfzlQ4tQmuEM61zd3MU7GTcKL0uZqyWVCbxlv1HJebrrrPHPTHRVbo12TYfxFLA@cs496-final-proj.appspot.com/chemical
+
+
+
+curl -i -X PUT -d "name=LiOH&cas=652-321-68&supplier=5649050225344512&catalog=20165-50G" -H "Accept: application/json" http://cs496-final-proj.appspot.com/chemical/5733935958982656
