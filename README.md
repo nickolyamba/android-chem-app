@@ -1,3 +1,3 @@
 # Chemicals Database.
-Back-end: Google App Engine NDB <br />
+Back-end: Google Cloud Platform <br />
 Front-end: Android App
