@@ -2,7 +2,7 @@
 Back-end: Google Cloud Platform <br />
 Front-end: Android App
 
-The ppp stores chemical suppliers, chemicals, and solutions made from the chemicals. All the data is stored in Google Cloud Datastore backend. The data is cached on the mobile device, so it can be accessed offline.
+The app stores chemical suppliers, chemicals, and solutions made from the chemicals. All the data is stored in Google Cloud Datastore backend. The data is cached on the mobile device, so it can be accessed offline.
 
 ![Alt text](https://cloud.githubusercontent.com/assets/8766167/9348616/798db028-45ee-11e5-82cc-fbe87454fb94.png)
 ![Alt text](https://cloud.githubusercontent.com/assets/8766167/9348615/798daaba-45ee-11e5-91e0-52a852bf9dee.png)
